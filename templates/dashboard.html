@@ -1,0 +1,95 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2><i class="bi bi-speedometer2"></i> Панель управления</h2>
+        <p class="text-muted">Управление JSON базами данных в реальном времени</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <button class="btn btn-success" onclick="refreshDatabases()">
+            <i class="bi bi-arrow-clockwise"></i> Обновить
+        </button>
+    </div>
+</div>
+
+<hr>
+
+<div class="row" id="databases-container">
+    {% for name, info in databases.items() %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-file-earmark-json"></i> {{ name }}
+                </h5>
+                <span class="badge bg-info">{{ info.record_count }} зап.</span>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="bi bi-file"></i> {{ info.filename }}<br>
+                        <i class="bi bi-calendar"></i> {{ info.modified }}<br>
+                        <i class="bi bi-hdd"></i> {{ "%.2f"|format(info.size/1024) }} KB
+                    </small>
+                </p>
+                {% if info.preview %}
+                <p class="mb-2"><strong>Ключи:</strong></p>
+                <div class="bg-light p-2 rounded">
+                    {% for key in info.preview %}
+                    <span class="badge bg-secondary me-1">{{ key }}</span>
+                    {% endfor %}
+                    {% if info.record_count > 5 %}
+                    <span class="text-muted">и ещё {{ info.record_count - 5 }}...</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('tables', db=name) }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-table"></i> Просмотр
+                </a>
+                <button class="btn btn-success btn-sm" onclick="downloadDatabase('{{ name }}')">
+                    <i class="bi bi-download"></i> Скачать
+                </button>
+                <button class="btn btn-warning btn-sm" onclick="createBackup('{{ name }}')">
+                    <i class="bi bi-save"></i> Бэкап
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-cloud-upload"></i> Загрузка базы данных</h5>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select class="form-select" id="dbName" name="db_name" required>
+                                <option value="">Выберите базу</option>
+                                {% for name in databases.keys() %}
+                                <option value="{{ name }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="file" class="form-control" id="databaseFile" name="file" accept=".json" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-upload"></i> Загрузить
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
