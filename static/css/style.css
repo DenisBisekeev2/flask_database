@@ -1,0 +1,66 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card {
+    border: none;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0,123,255,.1);
+}
+
+.key-input, .value-input {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.change-indicator {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.json-view {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.json-key {
+    color: #d14;
+}
+
+.json-string {
+    color: #0086b3;
+}
+
+.json-number {
+    color: #0086f7;
+}
+
+.json-boolean {
+    color: #a71d5d;
+}
+
+.json-null {
+    color: #999;
+}
